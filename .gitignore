@@ -1,0 +1,14 @@
+# Local environment variables
+.env
+
+# Documentation (local only as per request)
+_docs/
+
+# Database data
+db/data/
+
+# Dependencies
+node_modules/
+
+# OS files
+.DS_Store
