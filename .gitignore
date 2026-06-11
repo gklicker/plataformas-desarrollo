@@ -4,8 +4,8 @@
 # Documentation (local only as per request)
 _docs/
 
-# Database data
-db/data/
+# Volume data (runtime, never committed)
+volumes/mysql/
 
 # Dependencies
 node_modules/
