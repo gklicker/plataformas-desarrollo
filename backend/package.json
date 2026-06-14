@@ -1,7 +1,10 @@
 {
-  "name": "plataformas-backend",
+  "name": "corte-arte-backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
   "dependencies": {
     "bcrypt": "^5.1.1",
     "express": "^4.19.2",

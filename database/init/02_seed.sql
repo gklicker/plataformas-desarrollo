@@ -1,3 +1,5 @@
+SET NAMES utf8mb4;
+
 USE `plataformas_db`;
 
 -- Admin user (password: admin1234)
