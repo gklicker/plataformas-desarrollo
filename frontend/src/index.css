@@ -1,0 +1,67 @@
+:root {
+  --ca-dark: #1a1a2e;
+  --ca-gold: #c9a227;
+  --ca-gold-light: #e8c547;
+}
+
+body {
+  background-color: #f8f9fa;
+}
+
+.navbar-brand {
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.hero {
+  background: linear-gradient(135deg, var(--ca-dark) 0%, #16213e 100%);
+  color: white;
+  padding: 80px 0;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  font-weight: 700;
+}
+
+.hero .accent {
+  color: var(--ca-gold);
+}
+
+.btn-gold {
+  background-color: var(--ca-gold);
+  border-color: var(--ca-gold);
+  color: #1a1a2e;
+  font-weight: 600;
+}
+
+.btn-gold:hover {
+  background-color: var(--ca-gold-light);
+  border-color: var(--ca-gold-light);
+  color: #1a1a2e;
+}
+
+.card {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+.badge-status-pending    { background-color: #ffc107; color: #000; }
+.badge-status-confirmed  { background-color: #0d6efd; }
+.badge-status-cancelled  { background-color: #6c757d; }
+.badge-status-completed  { background-color: #198754; }
+
+.slot-btn {
+  min-width: 80px;
+}
+
+.page-title {
+  border-left: 4px solid var(--ca-gold);
+  padding-left: 12px;
+  margin-bottom: 1.5rem;
+}
