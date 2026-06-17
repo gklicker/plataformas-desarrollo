@@ -17,7 +17,7 @@ export default function AppNavbar() {
   return (
     <Navbar bg="dark" variant="dark" expand="lg" sticky="top">
       <Container>
-        <Navbar.Brand as={Link} to="/">✂ Corte &amp; Arte</Navbar.Brand>
+        <Navbar.Brand as={Link} to="/">✂ Corte <span>&amp;</span> Arte</Navbar.Brand>
         <Navbar.Toggle aria-controls="main-nav" />
         <Navbar.Collapse id="main-nav">
           <Nav className="me-auto">
