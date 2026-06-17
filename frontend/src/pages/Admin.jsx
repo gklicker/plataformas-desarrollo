@@ -15,23 +15,33 @@ const STATUS_LABELS = {
   cancelled: 'Cancelado', completed: 'Completado',
 };
 
+const EMPTY_MASTER = { name: '', specialty: '' };
+
 // ── Masters ──────────────────────────────────────────────────────────────────
 function MastersTab() {
   const [masters, setMasters] = useState([]);
-  const [show, setShow] = useState(false);
-  const [form, setForm] = useState({ name: '', specialty: '' });
+  const [show, setShow]   = useState(false);
+  const [editing, setEditing] = useState(null); // null = crear, object = editar
+  const [form, setForm]   = useState(EMPTY_MASTER);
   const [error, setError] = useState(null);
 
   const load = () => api.get('/masters').then(d => setMasters(d.results));
   useEffect(() => { load(); }, []);
 
+  const openCreate = () => { setEditing(null); setForm(EMPTY_MASTER); setError(null); setShow(true); };
+  const openEdit   = (m)  => { setEditing(m);   setForm({ name: m.name, specialty: m.specialty }); setError(null); setShow(true); };
+  const handleClose = ()  => setShow(false);
+
   const handleSave = async (e) => {
     e.preventDefault();
     setError(null);
     try {
-      await api.post('/masters', form);
+      if (editing) {
+        await api.put(`/masters/${editing.id}`, form);
+      } else {
+        await api.post('/masters', form);
+      }
       setShow(false);
-      setForm({ name: '', specialty: '' });
       load();
     } catch (err) { setError(err.message); }
   };
@@ -46,7 +56,7 @@ function MastersTab() {
     <>
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h5 className="mb-0">Maestros</h5>
-        <Button className="btn-gold" size="sm" onClick={() => setShow(true)}>+ Agregar maestro</Button>
+        <Button className="btn-gold" size="sm" onClick={openCreate}>+ Agregar maestro</Button>
       </div>
       <Table hover responsive>
         <thead className="table-dark">
@@ -59,31 +69,44 @@ function MastersTab() {
               <td>{m.specialty}</td>
               <td><Badge bg={m.is_active ? 'success' : 'secondary'}>{m.is_active ? 'Activo' : 'Inactivo'}</Badge></td>
               <td>
-                {m.is_active && (
-                  <Button variant="outline-danger" size="sm" onClick={() => handleDeactivate(m.id)}>Desactivar</Button>
-                )}
+                <div className="d-flex gap-2">
+                  <Button variant="outline-secondary" size="sm" onClick={() => openEdit(m)}>Editar</Button>
+                  {m.is_active && (
+                    <Button variant="outline-danger" size="sm" onClick={() => handleDeactivate(m.id)}>Desactivar</Button>
+                  )}
+                </div>
               </td>
             </tr>
           ))}
         </tbody>
       </Table>
 
-      <Modal show={show} onHide={() => setShow(false)}>
-        <Modal.Header closeButton><Modal.Title>Nuevo maestro</Modal.Title></Modal.Header>
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>{editing ? 'Editar maestro' : 'Nuevo maestro'}</Modal.Title>
+        </Modal.Header>
         <Form onSubmit={handleSave}>
           <Modal.Body>
             {error && <Alert variant="danger">{error}</Alert>}
             <Form.Group className="mb-3">
               <Form.Label>Nombre</Form.Label>
-              <Form.Control value={form.name} onChange={e => setForm(f => ({...f, name: e.target.value}))} required />
+              <Form.Control
+                value={form.name}
+                onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                required
+              />
             </Form.Group>
             <Form.Group>
               <Form.Label>Especialidad</Form.Label>
-              <Form.Control value={form.specialty} onChange={e => setForm(f => ({...f, specialty: e.target.value}))} required />
+              <Form.Control
+                value={form.specialty}
+                onChange={e => setForm(f => ({ ...f, specialty: e.target.value }))}
+                required
+              />
             </Form.Group>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={() => setShow(false)}>Cancelar</Button>
+            <Button variant="secondary" onClick={handleClose}>Cancelar</Button>
             <Button type="submit" className="btn-gold">Guardar</Button>
           </Modal.Footer>
         </Form>
@@ -93,22 +116,39 @@ function MastersTab() {
 }
 
 // ── Services ─────────────────────────────────────────────────────────────────
+const EMPTY_SERVICE = { name: '', description: '', price: '', duration: '' };
+
 function ServicesTab() {
   const [services, setServices] = useState([]);
-  const [show, setShow] = useState(false);
-  const [form, setForm] = useState({ name: '', description: '', price: '', duration: '' });
-  const [error, setError] = useState(null);
+  const [show, setShow]     = useState(false);
+  const [editing, setEditing] = useState(null);
+  const [form, setForm]     = useState(EMPTY_SERVICE);
+  const [error, setError]   = useState(null);
 
   const load = () => api.get('/services').then(d => setServices(d.results));
   useEffect(() => { load(); }, []);
 
+  const openCreate = () => { setEditing(null); setForm(EMPTY_SERVICE); setError(null); setShow(true); };
+  const openEdit   = (s)  => {
+    setEditing(s);
+    setForm({ name: s.name, description: s.description || '', price: s.price, duration: s.duration });
+    setError(null);
+    setShow(true);
+  };
+  const handleClose = () => setShow(false);
+  const set = (field, value) => setForm(f => ({ ...f, [field]: value }));
+
   const handleSave = async (e) => {
     e.preventDefault();
     setError(null);
+    const body = { ...form, price: Number(form.price), duration: Number(form.duration) };
     try {
-      await api.post('/services', { ...form, price: Number(form.price), duration: Number(form.duration) });
+      if (editing) {
+        await api.put(`/services/${editing.id}`, body);
+      } else {
+        await api.post('/services', body);
+      }
       setShow(false);
-      setForm({ name: '', description: '', price: '', duration: '' });
       load();
     } catch (err) { setError(err.message); }
   };
@@ -119,13 +159,11 @@ function ServicesTab() {
     load();
   };
 
-  const set = (field, value) => setForm(f => ({ ...f, [field]: value }));
-
   return (
     <>
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h5 className="mb-0">Servicios</h5>
-        <Button className="btn-gold" size="sm" onClick={() => setShow(true)}>+ Agregar servicio</Button>
+        <Button className="btn-gold" size="sm" onClick={openCreate}>+ Agregar servicio</Button>
       </div>
       <Table hover responsive>
         <thead className="table-dark">
@@ -138,15 +176,20 @@ function ServicesTab() {
               <td>${Number(s.price).toLocaleString('es-AR')}</td>
               <td>{s.duration} min</td>
               <td>
-                <Button variant="outline-danger" size="sm" onClick={() => handleDeactivate(s.id)}>Desactivar</Button>
+                <div className="d-flex gap-2">
+                  <Button variant="outline-secondary" size="sm" onClick={() => openEdit(s)}>Editar</Button>
+                  <Button variant="outline-danger" size="sm" onClick={() => handleDeactivate(s.id)}>Desactivar</Button>
+                </div>
               </td>
             </tr>
           ))}
         </tbody>
       </Table>
 
-      <Modal show={show} onHide={() => setShow(false)}>
-        <Modal.Header closeButton><Modal.Title>Nuevo servicio</Modal.Title></Modal.Header>
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>{editing ? 'Editar servicio' : 'Nuevo servicio'}</Modal.Title>
+        </Modal.Header>
         <Form onSubmit={handleSave}>
           <Modal.Body>
             {error && <Alert variant="danger">{error}</Alert>}
@@ -168,7 +211,7 @@ function ServicesTab() {
             </Form.Group>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={() => setShow(false)}>Cancelar</Button>
+            <Button variant="secondary" onClick={handleClose}>Cancelar</Button>
             <Button type="submit" className="btn-gold">Guardar</Button>
           </Modal.Footer>
         </Form>
