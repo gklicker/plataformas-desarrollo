@@ -4,7 +4,7 @@ USE `plataformas_db`;
 
 -- Admin user (password: admin1234)
 INSERT INTO users (name, email, password, is_admin) VALUES
-('Administrador', 'admin@cortearte.com', '$2b$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', TRUE);
+('Administrador', 'admin@cortearte.com', '$2b$10$bDFzeuLYVo98gGzR4KiZwuP6uQzNysSI6gGD8RUpdkA8VQLmrypce', TRUE);
 
 -- Masters
 INSERT INTO masters (name, specialty, photo_url) VALUES
