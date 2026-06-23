@@ -70,29 +70,7 @@ PUT	/appointments/:id/cancel	Auth/Admin	Cancelar turno
 GET	/appointments	Admin	Todos los turnos del sistema
 PUT	/appointments/:id/status	Admin	Actualizar estado de turno
 
-6. CAPTURAS DE PANTALLA
- 
-Página de inicio — hero con llamada a la acción y sección de beneficios
- 
-Catálogo de servicios — precio, duración e ícono por categoría
- 
-Listado de maestros — avatar con iniciales y botón de reserva directa
- 
-Formulario de inicio de sesión
- 
-Formulario de registro de nuevo cliente
- 
-Flujo de reserva — selección de maestro, servicio, fecha y horario disponible
- 
-Mis turnos — historial con estado, precio y opción de cancelación
- 
-Panel admin — listado completo de turnos con selector de estado
- 
-Panel admin — gestión de maestros (crear, editar, desactivar)
- 
-Panel admin — gestión de servicios (crear, editar, desactivar)
-
-7. INSTRUCCIONES DE EJECUCIÓN
+6. INSTRUCCIONES DE EJECUCIÓN
 Requisitos previos: Docker Desktop instalado.
 1.	Clonar el repositorio o descomprimir el archivo entregado.
 2.	Copiar el archivo .env.example a .env y completar las variables (ya viene preconfigurado para desarrollo local).
